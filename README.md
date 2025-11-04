@@ -17,8 +17,6 @@ A sleek, minimal Home Assistant card that automatically **flips between multiple
 
 ![Flip Mushroom Card demo](https://github.com/roy75/flip-mushroom-card/blob/main/mushroom-flip-animation.gif)
 
-*(Add your own GIF or screenshot above — name it `mushroom-flip-animation.gif` and place it in your repo root.)*
-
 ---
 
 🧩 Example
