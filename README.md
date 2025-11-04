@@ -92,6 +92,15 @@ type: custom:flip-mushroom-card
 
 ---
 
+🌍 Using GitHub Pages
+
+If you host this card on GitHub Pages, you can load it directly from a URL:
+```
+url: https://roy75.github.io/flip-mushroom-card/flip-mushroom-card.js
+type: module
+```
+
+---
 
 👨‍💻 Credits
 
