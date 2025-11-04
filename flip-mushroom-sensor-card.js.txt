@@ -10,7 +10,6 @@ class FlipMushroomCard extends HTMLElement {
       throw new Error("Gebruik minstens twee entities.");
     }
     this.config = config;
-    this.interval = config.interval || 3000;
   }
 
   set hass(hass) {
@@ -27,43 +26,47 @@ class FlipMushroomCard extends HTMLElement {
     const style = document.createElement("style");
     style.textContent = `
       ha-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
         padding: 16px;
         border-radius: 20px;
         background: linear-gradient(135deg, var(--mushroom-card-primary-bg, #1e293b), var(--mushroom-card-secondary-bg, #334155));
         color: var(--primary-text-color);
         box-shadow: var(--ha-card-box-shadow, 0 2px 6px rgba(0,0,0,0.2));
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        perspective: 800px;
+        transition: transform 0.5s, opacity 0.5s;
       }
-
-      .flip-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transform-style: preserve-3d;
-        transition: transform 0.6s ease, opacity 0.3s ease;
+      .fade {
+        opacity: 0;
+        transform: rotateY(90deg);
       }
-
-      .icon { font-size: 2em; margin-bottom: 8px; color: var(--mushroom-accent-color, #00bcd4); }
-      .value { font-size: 1.8em; font-weight: bold; }
-      .label { opacity: 0.7; font-size: 0.9em; margin-top: 4px; }
+      .icon {
+        font-size: 2em;
+        margin-bottom: 8px;
+        color: var(--mushroom-accent-color, #00bcd4);
+      }
+      .value {
+        font-size: 1.8em;
+        font-weight: bold;
+      }
+      .label {
+        opacity: 0.7;
+        font-size: 0.9em;
+        margin-top: 4px;
+      }
     `;
 
     const card = document.createElement("ha-card");
     card.innerHTML = `
-      <div class="flip-wrapper">
-        <ha-icon class="icon"></ha-icon>
-        <div class="value"></div>
-        <div class="label"></div>
-      </div>
+      <ha-icon class="icon"></ha-icon>
+      <div class="value"></div>
+      <div class="label"></div>
     `;
 
     this.shadowRoot.append(style, card);
     this.card = card;
-    this.wrapper = card.querySelector(".flip-wrapper");
   }
 
   updateCard() {
@@ -72,9 +75,9 @@ class FlipMushroomCard extends HTMLElement {
     const stateObj = this.hassInstance.states[entityId];
     if (!stateObj) return;
 
-    const icon = this.wrapper.querySelector(".icon");
-    const value = this.wrapper.querySelector(".value");
-    const label = this.wrapper.querySelector(".label");
+    const icon = this.card.querySelector(".icon");
+    const value = this.card.querySelector(".value");
+    const label = this.card.querySelector(".label");
 
     icon.setAttribute(
       "icon",
@@ -90,17 +93,15 @@ class FlipMushroomCard extends HTMLElement {
   }
 
   startFlip() {
+    const interval = this.config.interval || 3000;
     this.flipTimer = setInterval(() => {
-      // Start flip: Y-as (zijwaarts)
-      this.wrapper.style.transform = `rotateY(90deg)`;
-      this.wrapper.style.opacity = '0.3';
+      this.card.classList.add("fade");
       setTimeout(() => {
         this.currentIndex = (this.currentIndex + 1) % this.config.entities.length;
         this.updateCard();
-        this.wrapper.style.transform = `rotateY(0deg)`;
-        this.wrapper.style.opacity = '1';
-      }, 300);
-    }, this.interval);
+        this.card.classList.remove("fade");
+      }, 400);
+    }, interval);
   }
 
   disconnectedCallback() {
@@ -115,3 +116,6 @@ class FlipMushroomCard extends HTMLElement {
 customElements.define("flip-mushroom-card", FlipMushroomCard);
 
 customElements.define("flip-mushroom-card", FlipMushroomCard);
+
+customElements.define("flip-mushroom-card", FlipMushroomCard);
+
